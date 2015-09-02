@@ -1,6 +1,5 @@
 async = require("async")
 express = require("express")
-parseString = require("xml2js").parseString
 bodyParser = require("body-parser")
 sanitizeHtml = require("sanitize-html")
 request = require("request")
@@ -8,11 +7,7 @@ qr = require("qr-image")
 fs = require("graceful-fs")
 archiver = require("archiver")
 mkdirp = require("mkdirp")
-timeout = require("connect-timeout")
 favicon = require("serve-favicon")
-rimraf = require("rimraf")
-
-imgURL = "https://fieldofherosimageapi.azurewebsites.net/Service1.svc/images/";
 
 samplePerson = {
 	"Title": "Cpt",
@@ -42,17 +37,6 @@ samplePersonList = [
 	}
 ]
 
-
-
-
-
-
-BasicHttpBinding = require("wcf.js").BasicHttpBinding
-Proxy = require('wcf.js').Proxy
-binding = new BasicHttpBinding({})
-
-proxy = new Proxy(binding, process.env.BINDING_API)
-
 app = express()
 
 app.set("view engine", "jade")
@@ -62,52 +46,43 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(favicon(__dirname + "/favicon.ico"))
 
 app.get("/", function (req, res) {
-
-	getAllSoldiers(function (heroesList) {
-		res.render("allHeroes", {heroesList: heroesList})
+	getAllPeople(function (heroesList) {
+		res.render("allPeople", {heroesList: heroesList})
 	})
-
-	// res.render("allheroes", {heroesList: []});
 })
 
+app.get("/:personID", function (req, res) {
+	getPerson(req.params.personID, function (person) {
+		res.render("person", samplePerson);
+	})
+})
 
+app.get("/qr/:personID", function (req, res) {
+	personID = req.params.personID
+	url = req.protocol + '://' + req.get('host') + "/" + personID
+	generateQrCode (url, function (qrCode) {
+		qrCode.pipe(res)
+	})
+})
 
-
-function getAllSoldiers (cb) {
-
-	cb(samplePersonList);
-	//
-	// message = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header></s:Header><s:Body><GetAllHeroPairs xmlns="http://tempuri.org/"></GetAllHeroPairs></s:Body></s:Envelope>'
-	//
-	// proxy.send(message, "http://tempuri.org/IService1/GetAllHeroPairs", function(response, ctx) {
-	// 	//console.log(ctx.statusCode)
-	// 	//console.log(response)
-	// 	if (ctx.statusCode == 500) {
-	// 		res.sendStatus(500)
-	// 	}
-	// 	else {
-	// 		parseString(response, function (err, result){
-	// 			heroes = result['s:Envelope']["s:Body"][0]["GetAllHeroPairsResponse"][0]["GetAllHeroPairsResult"][0]["a:HeroPair"]
-	// 			heroesList = []
-	// 			for (i = 0; i < heroes.length; i++) {
-	// 				//console.log(heroes[i])
-	// 				heroesList.push( {
-	// 					name: heroes[i]["a:Name"][0],
-	// 					hash: heroes[i]["a:NameHashd"][0],
-	// 					DoD: heroes[i]["a:DoD"][0]
-	// 				})
-	// 			}
-	// 			//console.log(heroesList)
-	// 			cb(heroesList)
-	// 		})
-	// 	}
-	// })
+function getPerson(personID, cb) {
+	request.get("http://www.google.com/" + sanitizeHtml(personID), function () {
+		cb(samplePerson)
+	})
 }
 
+function getAllPeople (cb) {
+	cb(samplePersonList);
+}
 
-app.get("/:heroId", function (req, res) {
+function generateQrCode (url, cb) {
+	qr_code = qr.image(url, {type: "png"})
+	cb(qr_code)
+}
 
-	res.render("hero", samplePerson);
+port = process.env.PORT || 5000
+console.log("listening on", port)
+app.listen(port)
 
 	// message = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><GetRecordFromNameHash xmlns="http://tempuri.org/"><namehash>' + sanitizeHtml(req.params.heroId) + '</namehash></GetRecordFromNameHash></s:Body></s:Envelope>'
 	// proxy.send(message, "http://tempuri.org/IService1/GetRecordFromNameHash", function(response, ctx) {
@@ -143,28 +118,30 @@ app.get("/:heroId", function (req, res) {
 	// 	}
 	// })
 
-})
 
-app.get("/img/:heroid", function (req, res) {
-	request.get("https://fieldofherosimageapi.azurewebsites.net/Service1.svc/images/" + req.params.heroid).pipe(res)
-})
-
-
-app.get("/qr/:heroID", function (req, res) {
-
-	heroID = req.params.heroID
-	url = req.protocol + '://' + req.get('host') + "/" + heroID
-
-	generateQrCode (url, function (qrCode) {
-		qrCode.pipe(res)
-	})
-})
-
-function generateQrCode (url, cb) {
-	qr_code = qr.image(url, {type: "png"})
-	cb(qr_code)
-}
-
-
-console.log("listening")
-app.listen(process.env.PORT || 5000)
+	//
+	// message = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header></s:Header><s:Body><GetAllHeroPairs xmlns="http://tempuri.org/"></GetAllHeroPairs></s:Body></s:Envelope>'
+	//
+	// proxy.send(message, "http://tempuri.org/IService1/GetAllHeroPairs", function(response, ctx) {
+	// 	//console.log(ctx.statusCode)
+	// 	//console.log(response)
+	// 	if (ctx.statusCode == 500) {
+	// 		res.sendStatus(500)
+	// 	}
+	// 	else {
+	// 		parseString(response, function (err, result){
+	// 			heroes = result['s:Envelope']["s:Body"][0]["GetAllHeroPairsResponse"][0]["GetAllHeroPairsResult"][0]["a:HeroPair"]
+	// 			heroesList = []
+	// 			for (i = 0; i < heroes.length; i++) {
+	// 				//console.log(heroes[i])
+	// 				heroesList.push( {
+	// 					name: heroes[i]["a:Name"][0],
+	// 					hash: heroes[i]["a:NameHashd"][0],
+	// 					DoD: heroes[i]["a:DoD"][0]
+	// 				})
+	// 			}
+	// 			//console.log(heroesList)
+	// 			cb(heroesList)
+	// 		})
+	// 	}
+	// })

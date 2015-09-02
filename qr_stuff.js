@@ -1,3 +1,6 @@
+rimraf = require("rimraf")
+
+
 // app.get("/generate", timeout("600s"), function (req, res) {
 // 	res.send(200)
 // 	rimraf(__dirname + "/qrcodes", function () {
