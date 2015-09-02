@@ -15,20 +15,16 @@ rimraf = require("rimraf")
 imgURL = "https://fieldofherosimageapi.azurewebsites.net/Service1.svc/images/";
 
 samplePerson = {
-	"NameHashd": "asdf",
-	"Name": "asdf",
-	"Rating": "asdf",
-	"Service": "asdf",
-	"Component": "asdf",
-	"Age": "asdf",
-	"City": "asdf",
-	"State": "asdf",
-	"Country": "asdf",
-	"Unit": "asdf",
-	"DateOfDeath": "asdf",
-	"CasualtyCity": "asdf",
-	"CasualtyCountry": "asdf",
-	"ObitText": "asdf"
+	"Title": "Title",
+	"First": "First",
+	"Middle": "middle",
+	"Last": "last",
+	"Age": "age",
+	"Residence": "residence",
+	"State": "state",
+	"Location": "location",
+	"Bio": "bio 1",
+	"Bio 2": "bio 2"
 }
 
 samplePersonList = [
