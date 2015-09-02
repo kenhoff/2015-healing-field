@@ -4,8 +4,6 @@ bodyParser = require("body-parser")
 sanitizeHtml = require("sanitize-html")
 request = require("request")
 qrStuff = require("./qr_stuff")
-fs = require("graceful-fs")
-archiver = require("archiver")
 favicon = require("serve-favicon")
 people = require("./people")
 

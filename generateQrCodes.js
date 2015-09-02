@@ -1,5 +1,8 @@
 rimraf = require("rimraf")
 mkdirp = require("mkdirp")
+fs = require("graceful-fs")
+archiver = require("archiver")
+
 qrStuff = require("./qr_stuff")
 
 people = require("./people")
@@ -8,29 +11,18 @@ people = require("./people")
 
 
 rimraf(__dirname + "/qrcodes", function() {
-	getAllSoldiers(function(heroesList) {
+	people.getAllPeople(function(peopleList) {
 		//loop through soldiers
 		mkdirp(__dirname + "/qrcodes", function(err) {
 			if (err) {
 				console.log(err)
 			}
-			async.mapLimit(heroesList.slice(0, 10000), 10, function(hero, cb) {
-				//async.mapLimit(heroesList, 10, function (hero, cb){
-				url = req.protocol + '://' + req.get('host') + "/" + hero.hash
+			async.mapLimit(peopleList.slice(0, 10000), 10, function(person, cb) {
+			//async.mapLimit(peopleList, 10, function (person, cb){
+				url = req.protocol + '://' + req.get('host') + "/" + person.hash
 				console.log("generating qr code:", url)
-				generateQrCode(url, function(qrCode) {
-					initialDateString = hero.DoD.split(" ")[0].split("/")
-					year = initialDateString[2]
-					day = initialDateString[1]
-					if (day <= 9) {
-						day = "0" + day
-					}
-					month = initialDateString[0]
-					if (month <= 9) {
-						month = "0" + month
-					}
-					dateString = [year, month, day].join("-")
-					lastNameString = hero.name.split(",")[0]
+				qrStuff.generateQrCode(url, function(qrCode) {
+					lastNameString = person.name.split(",")[0]
 
 					fileString = dateString + "-" + lastNameString
 					console.log(fileString)
