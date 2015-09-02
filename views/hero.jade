@@ -1,0 +1,41 @@
+head
+	link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/journal/bootstrap.min.css", rel="stylesheet")
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	style.
+		#heroPhoto {
+			margin: auto;
+		}
+	script.
+		function imgError(image) {
+			image.onerror = ""
+			image.src = "http://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/300px-Flag_of_the_United_States.svg.png";
+			console.log(image)
+			return true
+		}
+	title #{Name}
+	link(rel="icon" href="/favicon.ico" type="image/gif")
+body
+	.container
+		.row
+			br
+			.col-sm-6(style = "display:flex")
+				img(src = "/img/#{NameHashd}", onerror = "imgError(this)")#heroPhoto.img-responsive
+			.col-sm-6
+				h1 #{Rating} #{Name}
+				h3 #{Service}, #{Component}
+				br
+				h4 Age #{Age}
+				h4 #{City}, #{State}, #{Country}
+				h4 #{Unit}
+				br
+				h4 Deceased #{DateOfDeath}
+				if CasualtyCity
+					h4 #{CasualtyCity}, #{CasualtyCountry}
+				else
+					h4 #{CasualtyCountry}
+				br
+		.row
+			.col-sm-12
+				br
+				p.lead #{ObitText}
+
