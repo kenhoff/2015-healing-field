@@ -13,26 +13,30 @@ app = express()
 
 app.set("view engine", "jade")
 
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({
+	extended: false
+}))
 
 app.use(favicon(__dirname + "/favicon.ico"))
 
-app.get("/", function (req, res) {
-	people.getAllPeople(function (peopleList) {
-		res.render("allPeople", {peopleList: peopleList})
+app.get("/", function(req, res) {
+	people.getAllPeople(function(peopleList) {
+		res.render("allPeople", {
+			peopleList: peopleList
+		})
 	})
 })
 
-app.get("/:personID", function (req, res) {
-	people.getPerson(sanitizeHtml(req.params.personID), function (person) {
+app.get("/:personID", function(req, res) {
+	people.getPerson(sanitizeHtml(req.params.personID), function(person) {
 		res.render("person", samplePerson);
 	})
 })
 
-app.get("/qr/:personID", function (req, res) {
+app.get("/qr/:personID", function(req, res) {
 	personID = sanitizeHtml(req.params.personID)
 	url = req.protocol + '://' + req.get('host') + "/" + personID
-	qrStuff.generateQrCode (url, function (qrCode) {
+	qrStuff.generateQrCode(url, function(qrCode) {
 		qrCode.pipe(res)
 	})
 })

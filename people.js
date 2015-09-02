@@ -1,4 +1,3 @@
-
 samplePerson = {
 	"Title": "Cpt",
 	"First": "John",
@@ -12,32 +11,28 @@ samplePerson = {
 	"Bio2": "bio 2"
 }
 
-samplePersonList = [
-	{
-		"name": "name",
-		"hash": "1234"
-	},
-	{
-		"name": "name",
-		"hash": "1234"
-	},
-	{
-		"name": "name",
-		"hash": "1234"
-	}
-]
+samplePersonList = [{
+	"name": "name",
+	"hash": "1234"
+}, {
+	"name": "name",
+	"hash": "1234"
+}, {
+	"name": "name",
+	"hash": "1234"
+}]
 
 
 module.exports = {}
 
-module.exports.getPerson = function (personID, cb) {
-	request.get("http://www.google.com/" + personID, function () {
+module.exports.getPerson = function(personID, cb) {
+	request.get("http://www.google.com/" + personID, function() {
 		cb(samplePerson)
 	})
 }
 
-module.exports.getAllPeople = function (cb) {
-	request.get("http://www.google.com", function () {
+module.exports.getAllPeople = function(cb) {
+	request.get("http://www.google.com", function() {
 		cb(samplePersonList);
 	})
 }
