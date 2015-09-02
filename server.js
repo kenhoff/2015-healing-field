@@ -28,11 +28,12 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(favicon(__dirname + "/favicon.ico"))
 
 app.get("/", function (req, res) {
-	
-	getAllSoldiers(function (heroesList) {
-		res.render("allHeroes", {heroesList: heroesList})
-	})
 
+	// getAllSoldiers(function (heroesList) {
+	// 	res.render("allHeroes", {heroesList: heroesList})
+	// })
+
+	res.render("allheroes", {heroesList: []});
 })
 
 
@@ -178,7 +179,7 @@ app.get("/qr/:heroID", function (req, res) {
 
 	heroID = req.params.heroID
 	url = req.protocol + '://' + req.get('host') + "/" + heroID
-	
+
 	generateQrCode (url, function (qrCode) {
 		qrCode.pipe(res)
 	})
