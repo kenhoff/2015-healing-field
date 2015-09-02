@@ -6,7 +6,6 @@ request = require("request")
 qr = require("qr-image")
 fs = require("graceful-fs")
 archiver = require("archiver")
-mkdirp = require("mkdirp")
 favicon = require("serve-favicon")
 
 samplePerson = {
@@ -46,19 +45,19 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(favicon(__dirname + "/favicon.ico"))
 
 app.get("/", function (req, res) {
-	getAllPeople(function (heroesList) {
-		res.render("allPeople", {heroesList: heroesList})
+	getAllPeople(function (peopleList) {
+		res.render("allPeople", {peopleList: peopleList})
 	})
 })
 
 app.get("/:personID", function (req, res) {
-	getPerson(req.params.personID, function (person) {
+	getPerson(sanitizeHtml(req.params.personID), function (person) {
 		res.render("person", samplePerson);
 	})
 })
 
 app.get("/qr/:personID", function (req, res) {
-	personID = req.params.personID
+	personID = sanitizeHtml(req.params.personID)
 	url = req.protocol + '://' + req.get('host') + "/" + personID
 	generateQrCode (url, function (qrCode) {
 		qrCode.pipe(res)
@@ -66,13 +65,15 @@ app.get("/qr/:personID", function (req, res) {
 })
 
 function getPerson(personID, cb) {
-	request.get("http://www.google.com/" + sanitizeHtml(personID), function () {
+	request.get("http://www.google.com/" + personID, function () {
 		cb(samplePerson)
 	})
 }
 
 function getAllPeople (cb) {
-	cb(samplePersonList);
+	request.get("http://www.google.com", function () {
+		cb(samplePersonList);
+	})
 }
 
 function generateQrCode (url, cb) {
