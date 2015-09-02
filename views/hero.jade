@@ -21,21 +21,13 @@ body
 			.col-sm-6(style = "display:flex")
 				img(src = "/img/#{NameHashd}", onerror = "imgError(this)")#heroPhoto.img-responsive
 			.col-sm-6
-				h1 #{Rating} #{Name}
-				h3 #{Service}, #{Component}
-				br
+				h1 #{Title} #{Last}, #{First} #{Middle}
+				h3 #{Residence}, #{State}
 				h4 Age #{Age}
-				h4 #{City}, #{State}, #{Country}
-				h4 #{Unit}
 				br
-				h4 Deceased #{DateOfDeath}
-				if CasualtyCity
-					h4 #{CasualtyCity}, #{CasualtyCountry}
-				else
-					h4 #{CasualtyCountry}
-				br
+				h4 #{Location}
 		.row
 			.col-sm-12
 				br
-				p.lead #{ObitText}
-
+				p.lead #{Bio}
+				p.lead #{Bio2}
