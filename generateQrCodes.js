@@ -29,13 +29,14 @@ rimraf(__dirname + "/qrcodes", function() {
 					fileString = person.Location + "-" + person.NameLFM
 
 					fileString = fileString.replace(/ /g, "");
-					fileString = fileString.replace(/WorldTradeCenterFirstResponders/g, "WTC-FR");
+					fileString = fileString.replace(/WorldTradeCenterFirstResponders/g, "WTCFR");
 					fileString = fileString.replace(/WorldTradeCenter/g, "WTC");
 					fileString = fileString.replace(/AAFlight11/g, "AA11");
 					fileString = fileString.replace(/AAFlight77/g, "AA77");
 					fileString = fileString.replace(/UAFlight93/g, "UA93");
 					fileString = fileString.replace(/UAFlight175/g, "UA175");
 					fileString = fileString.replace(/Pentagon/g, "P");
+					fileString = fileString.slice(0, 18);
 
 
 					// console.log(fileString)

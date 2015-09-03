@@ -27,6 +27,11 @@ app.get("/", function(req, res) {
 
 app.get("/:personID", function(req, res) {
 	people.getPerson(sanitizeHtml(req.params.personID), function(person) {
+		console.log(person)
+		person.Bio = person.Bio.replace(/^"(.*)"$/, '$1')
+		person.Bio2 = person.Bio2.replace(/^"(.*)"$/, '$1')
+		person.Bio = person.Bio + person.Bio2
+		person.Bio2 = ""
 		res.render("person", person);
 	})
 })
