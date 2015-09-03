@@ -2,13 +2,17 @@ rimraf = require("rimraf")
 mkdirp = require("mkdirp")
 fs = require("graceful-fs")
 archiver = require("archiver")
+request = require("request")
+async = require("async")
 
 qrStuff = require("./qr_stuff")
 
 people = require("./people")
 
+count = 0
+// 3113
 
-
+baseURL = "http://www.phoenixhealingfield.com/"
 
 rimraf(__dirname + "/qrcodes", function() {
 	people.getAllPeople(function(peopleList) {
@@ -17,19 +21,20 @@ rimraf(__dirname + "/qrcodes", function() {
 			if (err) {
 				console.log(err)
 			}
-			async.mapLimit(peopleList.slice(0, 10000), 10, function(person, cb) {
-			//async.mapLimit(peopleList, 10, function (person, cb){
-				url = req.protocol + '://' + req.get('host') + "/" + person.hash
-				console.log("generating qr code:", url)
+			// async.mapLimit(peopleList.slice(0, 10), 10, function(person, cb) {
+			async.mapLimit(peopleList, 10, function (person, cb){
+				url = baseURL + person.hash
+				// console.log("generating qr code:", url)
 				qrStuff.generateQrCode(url, function(qrCode) {
-					lastNameString = person.name.split(",")[0]
+					fileString = person.Location + "-" + person.NameLFM
 
-					fileString = dateString + "-" + lastNameString
 					console.log(fileString)
 					qrPipe = qrCode.pipe(fs.createWriteStream(__dirname + "/qrcodes/" + fileString + ".png"))
-					console.log("qrpipe created")
+					// console.log("qrpipe created")
 					qrPipe.on('close', function() {
-						console.log("pipe finished")
+						// console.log("pipe finished")
+						count++
+						console.log(count)
 						cb(null)
 					})
 				})

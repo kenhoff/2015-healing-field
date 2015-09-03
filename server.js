@@ -27,7 +27,7 @@ app.get("/", function(req, res) {
 
 app.get("/:personID", function(req, res) {
 	people.getPerson(sanitizeHtml(req.params.personID), function(person) {
-		res.render("person", samplePerson);
+		res.render("person", person);
 	})
 })
 
