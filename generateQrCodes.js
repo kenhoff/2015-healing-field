@@ -21,14 +21,24 @@ rimraf(__dirname + "/qrcodes", function() {
 			if (err) {
 				console.log(err)
 			}
-			// async.mapLimit(peopleList.slice(0, 10), 10, function(person, cb) {
+			// async.mapLimit(peopleList.slice(0, 100), 10, function(person, cb) {
 			async.mapLimit(peopleList, 10, function (person, cb){
-				url = baseURL + person.hash
+				url = baseURL + person.NameHashd
 				// console.log("generating qr code:", url)
 				qrStuff.generateQrCode(url, function(qrCode) {
 					fileString = person.Location + "-" + person.NameLFM
 
-					console.log(fileString)
+					fileString = fileString.replace(/ /g, "");
+					fileString = fileString.replace(/WorldTradeCenterFirstResponders/g, "WTC-FR");
+					fileString = fileString.replace(/WorldTradeCenter/g, "WTC");
+					fileString = fileString.replace(/AAFlight11/g, "AA11");
+					fileString = fileString.replace(/AAFlight77/g, "AA77");
+					fileString = fileString.replace(/UAFlight93/g, "UA93");
+					fileString = fileString.replace(/UAFlight175/g, "UA175");
+					fileString = fileString.replace(/Pentagon/g, "P");
+
+
+					// console.log(fileString)
 					qrPipe = qrCode.pipe(fs.createWriteStream(__dirname + "/qrcodes/" + fileString + ".png"))
 					// console.log("qrpipe created")
 					qrPipe.on('close', function() {
